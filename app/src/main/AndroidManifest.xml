@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mahalwar.plumbill">
 
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_icon_foreground"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/app_icon_foreground"
+        android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PlumBill">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:exported="true"
             android:theme="@style/Theme.PlumBill.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,23 +22,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddBillActivity"
+            android:name=".user.AddBillActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.PlumBill.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".AddItemActivity"
+            android:name=".user.AddItemActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.PlumBill.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-            </intent-filter>
         </activity>
+
+        <activity
+            android:name=".user.LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.PlumBill.NoActionBar"
+            tools:ignore="Instantiatable">
+        </activity>
+
+        <activity
+            android:name=".admin.RegisterActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.PlumBill.NoActionBar"
+            tools:ignore="Instantiatable">
+        </activity>
+
+        <activity
+            android:name=".user.ProfileActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.PlumBill.NoActionBar"
+            tools:ignore="Instantiatable">
+        </activity>
+
     </application>
 
 </manifest>

@@ -1,38 +1,32 @@
 package com.mahalwar.plumbill.ui.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.mahalwar.plumbill.user.LoginActivity;
 import com.mahalwar.plumbill.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends Fragment {
 
-    private LoginViewModel loginViewModel;
     private FragmentLoginBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        loginViewModel =
-                new ViewModelProvider(this).get(LoginViewModel.class);
+        LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textLogin;
-        loginViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
+        loginViewModel.getText().observe(getViewLifecycleOwner(), s -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
         });
         return root;
     }

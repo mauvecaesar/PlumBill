@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme">
-        <item name="colorNavigationItem">@color/menu_item_color_state</item>
+        <item name="colorNavigationItem">@color/orange</item>
         <item name="colorNavigationItemSelected">@color/white</item>
         <item name="drawableNavigationItemBackground">@drawable/menu_background_color_state</item>
     </style>
@@ -17,6 +17,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="alertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@drawable/alert_dialog_bg</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="strokeColor">@color/lightgrey</item>
+        <item name="android:textColorPrimary">@color/grey</item>
     </style>
 
 </resources>

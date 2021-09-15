@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.mahalwar.plumbill.MainActivity;
+import com.mahalwar.plumbill.user.AddBillActivity;
 import com.mahalwar.plumbill.R;
 
 import static com.mahalwar.plumbill.data.ProductContract.ProductEntry.COLUMN_NAME;
@@ -18,7 +18,7 @@ import static com.mahalwar.plumbill.data.ProductContract.ProductEntry._ID;
 
 public class ProductCursorAdapter extends CursorAdapter {
 
-    public ProductCursorAdapter(MainActivity context, Cursor c) {
+    public ProductCursorAdapter(AddBillActivity context, Cursor c) {
         super(context, c, 0);
     }
 
@@ -43,6 +43,6 @@ public class ProductCursorAdapter extends CursorAdapter {
         quantityTextView.setText("Quantity: " + quantity);
 
 
-        final long id = cursor.getLong(cursor.getColumnIndex(_ID));
+        @SuppressLint("Range") final long id = cursor.getLong(cursor.getColumnIndex(_ID));
     }
 }

@@ -1,4 +1,4 @@
-package com.mahalwar.plumbill;
+package com.mahalwar.plumbill.user;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -17,7 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.mahalwar.plumbill.data.ProductContract.ProductEntry;
+import com.mahalwar.plumbill.R;
 
 import static com.mahalwar.plumbill.data.ProductContract.CONTENT_URI;
 import static com.mahalwar.plumbill.data.ProductContract.ProductEntry.COLUMN_NAME;
