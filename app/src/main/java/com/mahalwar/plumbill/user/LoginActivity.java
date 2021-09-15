@@ -1,10 +1,10 @@
 package com.mahalwar.plumbill.user;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
@@ -12,15 +12,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.mahalwar.plumbill.R;
 
-import com.google.firebase.auth.FirebaseAuth;
+import java.util.Arrays;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
-    private AutoCompleteTextView mEmailView;
+    @SuppressLint("StaticFieldLeak")
+    public static AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+
+    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+            new FirebaseAuthUIActivityResultContract(),
+            this::onSignInResult
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(this::signInExistingUser);
 
         // TODO: Grab an instance of FirebaseAuth
-        mAuth = FirebaseAuth.getInstance();
     }
 
     // Executed when Sign in button pressed
@@ -75,30 +85,35 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show();
         }
 
-        // TODO: Use FirebaseAuth to sign in with email & password
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-            Log.d("FlashChat", "signInWithEmail() onComplete : " +task.isSuccessful());
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.PhoneBuilder().build());
+        // Create and launch sign-in intent
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build();
+        signInLauncher.launch(signInIntent);
 
-            if(!task.isSuccessful())
-            {
-                Log.d("FlashChat", "Problem signing in : " +task.getException());
-                showErrorDialog();
-            }
-            else
-            {
-                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                finish();
-                startActivity(intent);
-            }
-        });
+    }
 
+    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
+        if (result.getResultCode() == RESULT_OK) {
+            // Successfully signed in
+            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+            finish();
+            startActivity(intent);
+        } else {
+            showErrorDialog();
+        }
     }
 
     // TODO: Show error on screen with an alert dialog
     private void showErrorDialog()
     {
         new AlertDialog.Builder(this, R.style.alertDialogTheme)
-                .setTitle("Oops!")
+                .setTitle("Regret")
                 .setPositiveButton(android.R.string.ok, null)
                 .setMessage("There was a problem signing in!")
                 .setIcon(android.R.drawable.ic_dialog_alert)

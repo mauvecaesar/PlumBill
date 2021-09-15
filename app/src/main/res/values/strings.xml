@@ -54,12 +54,12 @@
     <string name="item">Item</string>
     <string name="_0">0</string>
 
-    <string name="prompt_username">Name</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="prompt_password_again">Confirm Password</string>
-    <string name="prompt_phone">Mobile Number</string>
-    <string name="prompt_aadhaar">Aadhaar Number</string>
+    <string name="prompt_username">Name :</string>
+    <string name="prompt_email">Email :</string>
+    <string name="prompt_password">Password :</string>
+    <string name="prompt_password_again">Confirm Password :</string>
+    <string name="prompt_phone">Mobile Number :</string>
+    <string name="prompt_aadhaar">Aadhaar Number :</string>
 
     <string name="action_sign_up">Sign Up</string>
     <string name="action_register">Register</string>
@@ -69,6 +69,9 @@
     <string name="error_field_required">Field Required!</string>
     <string name="error_invalid_email">Invalid Email!</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="contact">Contact :</string>
+    <string name="aadhaar">Aadhaar :</string>
+    <string name="user_id">User ID</string>
 
 
 </resources>

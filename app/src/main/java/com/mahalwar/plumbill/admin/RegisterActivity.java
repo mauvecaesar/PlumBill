@@ -3,7 +3,6 @@ package com.mahalwar.plumbill.admin;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -21,32 +20,35 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mahalwar.plumbill.R;
-import com.mahalwar.plumbill.user.LoginActivity;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    public static final String CHAT_PREFS = "ChatPrefs";
-    public static final String DISPLAY_NAME_KEY = "username";
+    //public static final String CHAT_PREFS = "ChatPrefs";
+    //public static final String DISPLAY_NAME_KEY = "username";
 
     // TODO: Add member variables here:
     // UI references.
     private AutoCompleteTextView mEmailView;
     private AutoCompleteTextView mUsernameView;
+    private AutoCompleteTextView mPhoneView;
+    private AutoCompleteTextView mAadhaarView;
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
     private ImageView imageView;
 
-    // Firebase instance variables
-    private FirebaseAuth mAuth;
     private StorageReference storageReference;
 
     private final int PICK_IMAGE_REQUEST = 22;
@@ -61,6 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordView = findViewById(R.id.register_password);
         mConfirmPasswordView = findViewById(R.id.register_confirm_password);
         mUsernameView = findViewById(R.id.register_username);
+        mPhoneView = findViewById(R.id.register_phone);
+        mAadhaarView = findViewById(R.id.register_aadhaar);
+
         Button buttonChooseImage = findViewById(R.id.buttonChoosePicture);
         Button buttonUploadImage = findViewById(R.id.buttonUploadPicture);
         imageView = findViewById(R.id.personimageView);
@@ -69,7 +74,13 @@ public class RegisterActivity extends AppCompatActivity {
         // Keyboard sign in action
         mConfirmPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == R.integer.register_form_finished || id == EditorInfo.IME_NULL) {
-                attemptRegistration();
+                try {
+                    attemptRegistration();
+                } catch (FirebaseAuthException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
             return false;
@@ -82,19 +93,24 @@ public class RegisterActivity extends AppCompatActivity {
 
         buttonUploadImage.setOnClickListener(v -> uploadImage());
 
-        registerButton.setOnClickListener(this::signUp);
+        registerButton.setOnClickListener(v -> {
+            try {
+                signUp(v);
+            } catch (FirebaseAuthException | IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         // TODO: Get hold of an instance of FirebaseAuth
-        mAuth = FirebaseAuth.getInstance();
+        // Firebase instance variables
     }
 
     private void SelectImage()
     {
-        // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Image from here..."), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     private void uploadImage()
@@ -109,16 +125,14 @@ public class RegisterActivity extends AppCompatActivity {
             // Defining the child of storageReference
             StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
 
-            // adding listeners on upload
-            // or failure of image
-            // Progress Listener for loading
-// percentage on the dialog box
-            ref.putFile(filePath).addOnSuccessListener(taskSnapshot -> {
+            ref.putFile(filePath)
+
+                    .addOnSuccessListener(taskSnapshot -> {
 
                 // Image uploaded successfully
                 // Dismiss dialog
                 progressDialog.dismiss();
-                Toast.makeText(RegisterActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
             })
                     .addOnFailureListener(e -> {
 
@@ -141,22 +155,14 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST
-                && resultCode == RESULT_OK
-                && data != null
-                && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             // Get the Uri of data
             filePath = data.getData();
             try {
 
                 // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore
-                        .Images
-                        .Media
-                        .getBitmap(
-                                getContentResolver(),
-                                filePath);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
             }
 
@@ -168,15 +174,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // Executed when Sign Up button is pressed.
-    public void signUp(View v) {
+    public void signUp(View v) throws FirebaseAuthException, IOException {
         attemptRegistration();
     }
 
-    private void attemptRegistration() {
+    private void attemptRegistration() throws FirebaseAuthException, IOException {
 
-        // Reset errors displayed in the form.
-        mEmailView.setError(null);
+        //Reset errors displayed in the form.
+        /*mEmailView.setError(null);
         mPasswordView.setError(null);
+        mAadhaarView.setError(null);
+        mPhoneView.setError(null);*/
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
@@ -185,13 +193,13 @@ public class RegisterActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        Log.d("FlashChat", "TextUtils.isEmpty(password): " + TextUtils.isEmpty(password));
-        Log.d("FlashChat", "TextUtils.isEmpty(password) && !isPasswordValid(password): " + (TextUtils.isEmpty(password) && isPasswordValid(password)));
+        Log.d("PlumBill", "TextUtils.isEmpty(password): " + TextUtils.isEmpty(password));
+        Log.d("PlumBill", "TextUtils.isEmpty(password) && !isPasswordValid(password): " + (TextUtils.isEmpty(password) && isPasswordValid(password)));
 
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
-            Log.d("FlashChat", "Password Invalid");
+            Log.d("PlumBill", "Password Invalid");
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -230,36 +238,49 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // TODO: Create a Firebase user
-    public void createFirebaseUser()
-    {
+    public void createFirebaseUser() throws FirebaseAuthException, IOException {
         String password = mPasswordView.getText().toString();
         String email = mEmailView.getText().toString();
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-            Log.d("PlumBill", "createUser onComplete : " +task.isSuccessful());
+        String aadhaar = mAadhaarView.getText().toString();
+        String phone = mPhoneView.getText().toString();
+        String name = mUsernameView.getText().toString();
+        final String[] imageUrl = new String[1];
 
-            if(!task.isSuccessful()) {
-                Log.d("PlumBill", "User creation failed!");
-                showErrorDialog();
-            }
+        // Handle any errors
+        storageReference.child(filePath.toString()).getDownloadUrl().addOnSuccessListener(uri -> imageUrl[0] = uri.toString()).addOnFailureListener(Throwable::printStackTrace);
 
-            else
-            {
-                saveDisplayName();
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                finish();
-                startActivity(intent);
-            }
-        });
+
+        FileInputStream refreshToken = new FileInputStream("C:\\Users\\hp\\AndroidStudioProjects\\PlumBill\\plumbill-firebase-adminsdk-1lohe-dc9d1117e8.json");
+
+        FirebaseOptions options = FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(refreshToken))
+                .build();
+
+        FirebaseApp.initializeApp(options);
+
+        UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+                .setEmail(email)
+                .setPhoneNumber(phone)
+                .setDisplayName(name)
+                .setPassword(password)
+                .setUid(aadhaar)
+                .setPhotoUrl(imageUrl[0]);
+
+        UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
+
+        if(userRecord.isDisabled())
+            showErrorDialog();
+        else
+            Log.d("PlumBill", "Successfully created new user: " + userRecord.getUid());
     }
-
-
+    /*
     // TODO: Save the display name to Shared Preferences
     private void saveDisplayName()
     {
         String displayName = mUsernameView.getText().toString();
         SharedPreferences prefs = getSharedPreferences(CHAT_PREFS, 0);
         prefs.edit().putString(DISPLAY_NAME_KEY, displayName).apply();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getUser();
 
         if(user!=null)
         {
@@ -275,7 +296,7 @@ public class RegisterActivity extends AppCompatActivity {
                     });
         }
 
-    }
+    }*/
 
     // TODO: Create an alert dialog to show in case registration failed
     private void showErrorDialog()
