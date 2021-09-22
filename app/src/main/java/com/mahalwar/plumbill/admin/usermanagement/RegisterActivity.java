@@ -1,4 +1,4 @@
-package com.mahalwar.plumbill.admin;
+package com.mahalwar.plumbill.admin.usermanagement;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -20,18 +20,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mahalwar.plumbill.R;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -50,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView imageView;
 
     private StorageReference storageReference;
+    private FirebaseFirestore firestore;
 
     private final int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
@@ -74,35 +73,21 @@ public class RegisterActivity extends AppCompatActivity {
         // Keyboard sign in action
         mConfirmPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == R.integer.register_form_finished || id == EditorInfo.IME_NULL) {
-                try {
-                    attemptRegistration();
-                } catch (FirebaseAuthException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                attemptRegistration();
                 return true;
             }
             return false;
         });
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        firestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         buttonChooseImage.setOnClickListener(v -> SelectImage());
 
         buttonUploadImage.setOnClickListener(v -> uploadImage());
 
-        registerButton.setOnClickListener(v -> {
-            try {
-                signUp(v);
-            } catch (FirebaseAuthException | IOException e) {
-                e.printStackTrace();
-            }
-        });
+        registerButton.setOnClickListener(v -> attemptRegistration());
 
-        // TODO: Get hold of an instance of FirebaseAuth
-        // Firebase instance variables
     }
 
     private void SelectImage()
@@ -159,6 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             // Get the Uri of data
             filePath = data.getData();
+
             try {
 
                 // Setting image on image view using Bitmap
@@ -173,12 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    // Executed when Sign Up button is pressed.
-    public void signUp(View v) throws FirebaseAuthException, IOException {
-        attemptRegistration();
-    }
-
-    private void attemptRegistration() throws FirebaseAuthException, IOException {
+    private void attemptRegistration() {
 
         //Reset errors displayed in the form.
         /*mEmailView.setError(null);
@@ -238,40 +219,37 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // TODO: Create a Firebase user
-    public void createFirebaseUser() throws FirebaseAuthException, IOException {
+    public void createFirebaseUser() {
         String password = mPasswordView.getText().toString();
         String email = mEmailView.getText().toString();
         String aadhaar = mAadhaarView.getText().toString();
         String phone = mPhoneView.getText().toString();
         String name = mUsernameView.getText().toString();
-        final String[] imageUrl = new String[1];
 
         // Handle any errors
-        storageReference.child(filePath.toString()).getDownloadUrl().addOnSuccessListener(uri -> imageUrl[0] = uri.toString()).addOnFailureListener(Throwable::printStackTrace);
+        storageReference.child(aadhaar).putFile(filePath).addOnSuccessListener(taskSnapshot -> makeToast()).addOnFailureListener(e -> showErrorDialog());
 
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
-        FileInputStream refreshToken = new FileInputStream("C:\\Users\\hp\\AndroidStudioProjects\\PlumBill\\plumbill-firebase-adminsdk-1lohe-dc9d1117e8.json");
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
 
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(refreshToken))
-                .build();
+            DocumentReference documentReference = firestore.collection("Users").document(aadhaar);
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("Name", name);
+            userInfo.put("Email", email);
+            userInfo.put("Phone", phone);
+            userInfo.put("Aadhaar", aadhaar);
+            userInfo.put("UID", aadhaar);
+            userInfo.put("isUser", "1");
+            userInfo.put("imgURL", filePath.toString());
 
-        FirebaseApp.initializeApp(options);
+            documentReference.set(userInfo);
+        }).addOnFailureListener(e -> showErrorDialog());
 
-        UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-                .setEmail(email)
-                .setPhoneNumber(phone)
-                .setDisplayName(name)
-                .setPassword(password)
-                .setUid(aadhaar)
-                .setPhotoUrl(imageUrl[0]);
+    }
 
-        UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
-
-        if(userRecord.isDisabled())
-            showErrorDialog();
-        else
-            Log.d("PlumBill", "Successfully created new user: " + userRecord.getUid());
+    private void makeToast(){
+        Toast.makeText(this, "Image Uploaded", Toast.LENGTH_SHORT).show();
     }
     /*
     // TODO: Save the display name to Shared Preferences

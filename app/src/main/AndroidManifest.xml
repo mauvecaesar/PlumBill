@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.mahalwar.plumbill">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,45 +15,32 @@
         android:theme="@style/Theme.PlumBill">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
             android:exported="true"
-            android:theme="@style/Theme.PlumBill.NoActionBar">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".user.AddBillActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.PlumBill.NoActionBar">
-        </activity>
-        <activity
-            android:name=".user.AddItemActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.PlumBill.NoActionBar">
-        </activity>
 
-        <activity
-            android:name=".user.LoginActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.PlumBill.NoActionBar"
-            tools:ignore="Instantiatable">
-        </activity>
+        <activity android:name=".admin.AdminActivity" />
+        <activity android:name=".admin.ProductActivity"/>
+        <activity android:name=".admin.UserActivity"/>
 
-        <activity
-            android:name=".admin.RegisterActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.PlumBill.NoActionBar"
-            tools:ignore="Instantiatable">
-        </activity>
+        <activity android:name=".admin.product.RemoveItemActivity"/>
+        <activity android:name=".admin.product.AddItemActivity"/>
+        <activity android:name=".admin.product.UpdateItemActivity"/>
 
-        <activity
-            android:name=".user.ProfileActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.PlumBill.NoActionBar"
-            tools:ignore="Instantiatable">
-        </activity>
+        <activity android:name=".admin.usermanagement.ProfileActivity"/>
+        <activity android:name=".admin.usermanagement.RegisterActivity"/>
+        <activity android:name=".admin.usermanagement.RemoveActivity"/>
+        <activity android:name=".admin.usermanagement.UpdateActivity"/>
+        <activity android:name=".admin.usermanagement.ViewUsersActivity"/>
+
+        <activity android:name=".user.AddBillActivity"/>
+        <activity android:name=".user.LoginActivity" />
+        <activity android:name=".user.AddItemActivity"/>
 
     </application>
 

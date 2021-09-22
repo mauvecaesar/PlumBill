@@ -72,6 +72,21 @@
     <string name="contact">Contact :</string>
     <string name="aadhaar">Aadhaar :</string>
     <string name="user_id">User ID</string>
+    <string name="create_bill">Create Bill</string>
+    <string name="aboutdesc">PlumBill is a platform to effectively manage the plumbing network operated by Vinayak Hardware. It provides a variety of functionalities to create and share a bill, access billing information and a wide range of Administrator functions to effectively manipulate the database with user-friendly interface.</string>
+    <string name="developer">Developed by Nishi Mahalwar</string>
+    <string name="manage_users">Manage Users</string>
+    <string name="manage_products">Manage Products</string>
+    <string name="delete_item">Delete Item</string>
+    <string name="add_item">Add Item</string>
+    <string name="update_item">Update Item</string>
+    <string name="add_user">Add User</string>
+    <string name="delete_user">Delete User</string>
+    <string name="update_user">Update User</string>
+    <string name="view_user">View User</string>
+    <string name="view_all_users">View All Users</string>
+    <string name="enter_user_id">Enter User ID</string>
+    <string name="submit">Submit</string>
 
 
 </resources>

@@ -1,37 +1,33 @@
 package com.mahalwar.plumbill.user;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mahalwar.plumbill.R;
+import com.mahalwar.plumbill.admin.AdminActivity;
+import com.mahalwar.plumbill.admin.usermanagement.ProfileActivity;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
-    @SuppressLint("StaticFieldLeak")
-    public static AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
 
-    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
-            new FirebaseAuthUIActivityResultContract(),
-            this::onSignInResult
-    );
+    private FirebaseFirestore firestore;
+    private FirebaseAuth mAuth;
+    private AutoCompleteTextView mEmailView;
+    private EditText mPasswordView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,38 +37,16 @@ public class LoginActivity extends AppCompatActivity {
         mEmailView = findViewById(R.id.login_email);
         mPasswordView = findViewById(R.id.login_password);
 
-        mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
-            if (id == R.integer.login || id == EditorInfo.IME_NULL) {
-                attemptLogin();
-                return true;
-            }
-            return false;
-        });
-
-        Button registerButton = findViewById(R.id.login_register_button);
-        registerButton.setOnClickListener(this::registerNewUser);
-
         Button loginButton = findViewById(R.id.login_sign_in_button);
-        loginButton.setOnClickListener(this::signInExistingUser);
+        loginButton.setOnClickListener(this::attemptLogin);
 
         // TODO: Grab an instance of FirebaseAuth
-    }
-
-    // Executed when Sign in button pressed
-    public void signInExistingUser(View v)   {
-        // TODO: Call attemptLogin() here
-        attemptLogin();
-    }
-
-    // Executed when Register button pressed
-    public void registerNewUser(View v) {
-        Intent intent = new Intent(this, com.mahalwar.plumbill.admin.RegisterActivity.class);
-        finish();
-        startActivity(intent);
+        firestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     // TODO: Complete the attemptLogin() method
-    private void attemptLogin() {
+    private void attemptLogin(View v) {
         String password = mPasswordView.getText().toString();
         String email = mEmailView.getText().toString();
 
@@ -85,28 +59,45 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show();
         }
 
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build());
-        // Create and launch sign-in intent
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build();
-        signInLauncher.launch(signInIntent);
+        // TODO: Use FirebaseAuth to sign in with email & password
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+            Log.d("PlumBill", "signInWithEmail() onComplete : " +task.isSuccessful());
 
+            if(!task.isSuccessful())
+            {
+                Log.d("PlumBill", "Problem signing in : " +task.getException());
+                showErrorDialog();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Signed in successfully", Toast.LENGTH_SHORT).show();
+                checkAccessLevel(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+            }
+        });
     }
 
-    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
-        if (result.getResultCode() == RESULT_OK) {
-            // Successfully signed in
-            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-            finish();
-            startActivity(intent);
-        } else {
-            showErrorDialog();
-        }
+    private void checkAccessLevel(String uid){
+        DocumentReference documentReference = firestore.collection("Users").document(uid);
+        documentReference.get().addOnSuccessListener(documentSnapshot -> {
+            if(documentSnapshot.exists()){
+                if(documentSnapshot.getString("isAdmin").equals("true")){
+                        Log.d("PlumBill", "Logged in Admin");
+                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+                        finish();
+                }
+                else
+                {
+                    Log.d("PlumBill", "Logged in User");
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    finish();
+                }            }
+
+            else {
+                Log.d("PlumBill", "Logged in User");
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();
+            }
+        });
     }
 
     // TODO: Show error on screen with an alert dialog

@@ -15,25 +15,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.mahalwar.plumbill.databinding.FragmentHelpBinding;
 
 public class HelpFragment extends Fragment {
-    private HelpViewModel helpViewModel;
     private FragmentHelpBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        helpViewModel =
-                new ViewModelProvider(this).get(HelpViewModel.class);
 
         binding = FragmentHelpBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
 
-        final TextView textView = binding.textHelp;
-        helpViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+        return binding.getRoot();
     }
 
     @Override

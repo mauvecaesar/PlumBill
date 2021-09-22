@@ -22,19 +22,8 @@
 
     <include
         layout="@layout/content_main"
-        android:background="#ffffff" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        style="@style/Theme.PlumBill"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:contentDescription="@string/todo"
-        app:backgroundTint="@color/orange"
-        app:rippleColor="@color/white"
-        app:srcCompat="@drawable/add"
-        tools:ignore="UsingOnClickInXml" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/lighter_orange" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

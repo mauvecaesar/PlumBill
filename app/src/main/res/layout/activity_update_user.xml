@@ -3,14 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    style="@style/AppTheme">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/lighter_orange"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="20dp"
-        style="@style/AppTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,8 +22,12 @@
 
         <ImageView
             android:id="@+id/personimageView"
-            style="@style/ImageTheme"
-            android:layout_marginBottom="@dimen/margin" />
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
+            app:srcCompat="@drawable/plumbill_logo1_transparent"
+            android:contentDescription="@string/todo" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -31,10 +37,9 @@
             <AutoCompleteTextView
                 android:id="@+id/register_username"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_username"
                 style="@style/AutoCompleteTheme"
-                android:inputType="textNoSuggestions"
                 tools:targetApi="p" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -47,9 +52,8 @@
             <AutoCompleteTextView
                 android:id="@+id/register_phone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_phone"
-                android:inputType="phone"
                 style="@style/AutoCompleteTheme"
                 tools:targetApi="p" />
 
@@ -63,9 +67,8 @@
             <AutoCompleteTextView
                 android:id="@+id/register_aadhaar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_aadhaar"
-                android:inputType="numberDecimal"
                 style="@style/AutoCompleteTheme"
                 tools:targetApi="p" />
 
@@ -79,9 +82,8 @@
             <AutoCompleteTextView
                 android:id="@+id/register_email"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
                 style="@style/AutoCompleteTheme"
                 tools:targetApi="p" />
 
@@ -91,15 +93,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin">
-
             <EditText
                 android:id="@+id/register_password"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
+                android:imeOptions="actionNext"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
-                style="@style/AutoCompleteTheme"
+                android:maxLines="1"
+                android:paddingTop="5dp"
+                android:paddingLeft="15dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="15dp"
+                android:fontFamily="@font/montserrat"
+                android:textColorHint="@color/lightgrey"
+                android:textSize="20sp"
                 tools:targetApi="p" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -112,52 +121,33 @@
             <EditText
                 android:id="@+id/register_confirm_password"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/prompt_password_again"
                 android:imeActionId="@integer/register_form_finished"
                 android:imeActionLabel="@string/action_sign_up"
                 android:imeOptions="actionUnspecified"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
-                style="@style/AutoCompleteTheme"
+                android:maxLines="1"
+                android:paddingTop="5dp"
+                android:paddingLeft="15dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="15dp"
+                android:fontFamily="@font/montserrat"
+                android:textColorHint="@color/lightgrey"
+                android:textSize="20sp"
                 tools:targetApi="p" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal|center_vertical|center"
-            android:layout_gravity="center_horizontal|center|center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/buttonChoosePicture"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:text="@string/choose_picture"
-                android:layout_marginRight="5dp"
-                style="@style/whiteButtonTheme"
-                android:layout_marginEnd="5dp"/>
-
-            <Button
-                android:id="@+id/buttonUploadPicture"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="@string/load_picture"
-                style="@style/whiteButtonTheme"
-                android:layout_marginStart="5dp"/>
-
-        </LinearLayout>
-
         <Button
-            android:id="@+id/register_sign_up_button"
+            android:id="@+id/update_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/action_sign_up"
-            style="@style/ButtonTheme" />
-
+            android:baselineAligned="false"
+            style="@style/ButtonTheme"
+            android:layout_marginTop="30dp"
+            android:text="@string/update_user" />
 
     </LinearLayout>
 

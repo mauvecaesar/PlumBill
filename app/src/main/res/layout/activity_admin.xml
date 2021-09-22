@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:foregroundGravity="center_horizontal"
+    style="@style/AppTheme"
+    android:padding="0dp"
+    tools:context=".admin.AdminActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toTopOf="@+id/user_management_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/plumbill_logo1_transparent" />
+
+    <Button
+        android:id="@+id/user_management_button"
+        style="@style/ButtonTheme"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:text="@string/manage_users"
+        app:layout_constraintBottom_toTopOf="@+id/product_management_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <Button
+        android:id="@+id/product_management_button"
+        style="@style/ButtonTheme"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:text="@string/manage_products"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_management_button" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

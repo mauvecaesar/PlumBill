@@ -24,10 +24,7 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        loginViewModel.getText().observe(getViewLifecycleOwner(), s -> {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-        });
+        loginViewModel.getText().observe(getViewLifecycleOwner(), s -> startActivity(new Intent(getActivity(), LoginActivity.class)));
         return root;
     }
 

@@ -29,7 +29,7 @@ import static com.mahalwar.plumbill.data.ProductContract.ProductEntry.COLUMN_NAM
 import static com.mahalwar.plumbill.data.ProductContract.ProductEntry._ID;
 
 
-public class AddBillActivity extends android.app.Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AddBillActivity extends android.app.Activity {
 
     private ProductCursorAdapter mProductAdapter;
 
@@ -47,8 +47,8 @@ public class AddBillActivity extends android.app.Activity implements LoaderManag
             AddBillActivity.this.startActivity(intent);
         });
 
-        int LOADER_ID = 1;
-        getLoaderManager().initLoader(LOADER_ID, null, null);
+        /*int LOADER_ID = 1;
+        getLoaderManager().initLoader(LOADER_ID, null, null);*/
         ListView listView = findViewById(R.id.list);
         listView.setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
         listView.setEmptyView(listView.getEmptyView());
@@ -88,7 +88,8 @@ public class AddBillActivity extends android.app.Activity implements LoaderManag
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
-
+}
+/*
     @NotNull
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -104,4 +105,4 @@ public class AddBillActivity extends android.app.Activity implements LoaderManag
     public void onLoaderReset(@NonNull @NotNull Loader<Cursor> loader) {
         mProductAdapter.swapCursor(null);
     }
-}
+}*/
