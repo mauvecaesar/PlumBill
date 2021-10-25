@@ -23,13 +23,13 @@
         android:layout_height="wrap_content"
         android:autofillHints="@string/product_name"
         android:text="@string/enter_product_name"
-        app:layout_constraintBottom_toTopOf="@+id/editText_updateitemname"
+        app:layout_constraintBottom_toTopOf="@+id/editText_additemname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <EditText
-        android:id="@+id/editText_updateitemname"
+        android:id="@+id/editText_additemname"
         style="@style/EditorFieldStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -49,13 +49,13 @@
         android:layout_height="wrap_content"
         android:autofillHints="Product ID"
         android:text="@string/enter_product_id"
-        app:layout_constraintBottom_toTopOf="@+id/editText_updateitemid"
+        app:layout_constraintBottom_toTopOf="@+id/editText_additemid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_updateitemname" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_additemname" />
 
     <EditText
-        android:id="@+id/editText_updateitemid"
+        android:id="@+id/editText_additemid"
         style="@style/EditorFieldStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -75,13 +75,13 @@
         android:layout_height="wrap_content"
         android:autofillHints="@string/product_price"
         android:text="@string/enter_product_price"
-        app:layout_constraintBottom_toTopOf="@id/editText_updateitemprice"
+        app:layout_constraintBottom_toTopOf="@id/editText_additemprice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_updateitemid" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_additemid" />
 
     <EditText
-        android:id="@+id/editText_updateitemprice"
+        android:id="@+id/editText_additemprice"
         style="@style/EditorFieldStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_updateitemprice" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_additemprice" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

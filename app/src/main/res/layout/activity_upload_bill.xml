@@ -6,106 +6,87 @@
     style="@style/AppTheme">
 
     <ImageView
-        android:id="@+id/imageView4"
-        style="@style/ImageTheme"
+        android:id="@+id/imageView"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/textView1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/todo" />
+        android:contentDescription="@string/todo"
+        style="@style/ImageTheme" />
 
     <TextView
         android:id="@+id/textView1"
         style="@style/TextViewTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autofillHints="@string/product_name"
-        android:text="@string/enter_product_name"
-        app:layout_constraintBottom_toTopOf="@+id/editText_updateitemname"
+        android:text="@string/enter_user_id"
+        app:layout_constraintBottom_toTopOf="@+id/editText_UID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
-        android:id="@+id/editText_updateitemname"
+        android:id="@+id/editText_UID"
         style="@style/EditorFieldStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin"
-        android:hint="@string/product_name"
-        android:inputType="textCapWords"
+        android:hint="@string/aadhaar"
+        android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView1"
-        android:autofillHints="@string/product_name" />
+        android:autofillHints="@string/aadhaar" />
 
     <TextView
         android:id="@+id/textView2"
         style="@style/TextViewTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autofillHints="Product ID"
-        android:text="@string/enter_product_id"
-        app:layout_constraintBottom_toTopOf="@+id/editText_updateitemid"
+        android:text="@string/enter_bill_amount"
+        app:layout_constraintBottom_toTopOf="@+id/editText_Amt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_updateitemname" />
+        app:layout_constraintTop_toBottomOf="@id/editText_UID" />
 
     <EditText
-        android:id="@+id/editText_updateitemid"
+        android:id="@+id/editText_Amt"
         style="@style/EditorFieldStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin"
-        android:hint="@string/product_id"
-        android:inputType="textCapWords"
-        android:autofillHints="@string/product_id"
-        app:layout_constraintBottom_toTopOf="@id/textView3"
+        android:hint="@string/bill_amount"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/uploadBillButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        android:autofillHints="@string/bill_amount" />
 
-    <TextView
-        android:id="@+id/textView3"
-        style="@style/TextViewTheme"
+    <Button
+        android:id="@+id/uploadBillButton"
+        style="@style/whiteButtonTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autofillHints="@string/product_price"
-        android:text="@string/enter_product_price"
-        app:layout_constraintBottom_toTopOf="@id/editText_updateitemprice"
+        android:layout_marginTop="@dimen/margin"
+        android:drawableStart="@android:drawable/ic_menu_upload"
+        android:drawableLeft="@android:drawable/ic_menu_upload"
+        android:text="@string/upload_file"
+        app:layout_constraintBottom_toTopOf="@id/submitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_updateitemid" />
-
-    <EditText
-        android:id="@+id/editText_updateitemprice"
-        style="@style/EditorFieldStyle"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:autofillHints="@string/product_price"
-        android:hint="@string/product_price"
-        android:inputType="textCapWords"
-        app:layout_constraintBottom_toTopOf="@+id/submitButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editText_Amt" />
 
     <Button
         android:id="@+id/submitButton"
         style="@style/ButtonTheme"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_marginBottom="50dp"
         android:text="@string/submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_updateitemprice" />
-
+        app:layout_constraintTop_toBottomOf="@+id/uploadBillButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

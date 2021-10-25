@@ -1,46 +1,29 @@
 package com.mahalwar.plumbill.user;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
-import android.content.DialogInterface;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.mahalwar.plumbill.data.ProductContract.ProductEntry;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.mahalwar.plumbill.R;
 
-import static com.mahalwar.plumbill.data.ProductContract.CONTENT_URI;
-import static com.mahalwar.plumbill.data.ProductContract.ProductEntry.COLUMN_NAME;
-import static com.mahalwar.plumbill.data.ProductContract.ProductEntry.COLUMN_QUANTITY;
-import static com.mahalwar.plumbill.data.ProductContract.ProductEntry._ID;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
+public class AddItemActivity extends android.app.Activity {
 
-import androidx.core.app.NavUtils;
-
-public class AddItemActivity extends android.app.Activity implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    private Uri mCurrentProduct;
     EditText mQuantityEditText;
     Spinner spinner;
-    private final String LOGTAG = AddItemActivity.class.getName();
-    private boolean mProductHasChanged = false;
 
-    public AddItemActivity() {
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,24 +34,48 @@ public class AddItemActivity extends android.app.Activity implements LoaderManag
         ImageButton mMinusButton = findViewById(R.id.decrease_quantity);
         spinner = findViewById(R.id.spinner);
 
-        mCurrentProduct = getIntent().getData();
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        CollectionReference productsRef = rootRef.collection("Products");
 
-        if (mCurrentProduct != null) {
-            setTitle(R.string.enter_product_title);
-            int LOADER_ID = 1;
-            getLoaderManager().initLoader(LOADER_ID, null, this);
-        } else {
-            setTitle(R.string.enter_product_title);
-        }
+        List<String> products = new ArrayList<>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, products);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
-        mPlusButton.setOnClickListener(view -> {
-            AddOneToQuantity();
-            mProductHasChanged = true;
+        productsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                    String product = document.getString("PName");
+                    products.add(product);
+                }
+                adapter.notifyDataSetChanged();
+            }
         });
-        mMinusButton.setOnClickListener(view -> {
-            RemoveOneToQuantity();
-            mProductHasChanged = true;
+
+        mPlusButton.setOnClickListener(view -> AddOneToQuantity());
+        mMinusButton.setOnClickListener(view -> RemoveOneToQuantity());
+
+        Intent data = new Intent();
+        final String[] result = new String[1];
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                result[0] = adapterView.getSelectedItem().toString().toUpperCase();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
         });
+
+        //---set the data to pass back---
+        data.putExtra("Item", result[0]);
+        data.putExtra("Quantity", mQuantityEditText.getText());
+        setResult(RESULT_OK, data);
+        //---close the activity---
+        finish();
 
     }
 
@@ -79,8 +86,7 @@ public class AddItemActivity extends android.app.Activity implements LoaderManag
             value = 0;
         } else {
             if (Integer.parseInt(previousValueString) < 0) {
-                Toast.makeText(this, getString(R.string.invalid_input),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.invalid_input), Toast.LENGTH_SHORT).show();
                 mQuantityEditText.setText("0");
             }
             value = Integer.parseInt(previousValueString);
@@ -100,8 +106,7 @@ public class AddItemActivity extends android.app.Activity implements LoaderManag
                 value = 0;
             } else {
                 if (Integer.parseInt(previousValueString) < 0) {
-                    Toast.makeText(this, getString(R.string.invalid_input),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.invalid_input), Toast.LENGTH_SHORT).show();
                     mQuantityEditText.setText("0");
                 }
                 value = Integer.parseInt(previousValueString);
@@ -109,6 +114,8 @@ public class AddItemActivity extends android.app.Activity implements LoaderManag
             mQuantityEditText.setText(String.valueOf(value - 1));
         }
     }
+
+    /*
 
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -251,6 +258,7 @@ public class AddItemActivity extends android.app.Activity implements LoaderManag
         mQuantityEditText.setText(Integer.toString(0));
     }
 
+
     private void showDeleteConfirmationDialog() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_dialog);
@@ -279,5 +287,5 @@ public class AddItemActivity extends android.app.Activity implements LoaderManag
             }
         }
         finish();
-    }
+    }*/
 }

@@ -1,5 +1,6 @@
 package com.mahalwar.plumbill.admin.usermanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -26,7 +27,11 @@ public class UpdateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.get_user_uid);
+        Intent intent = new Intent(getApplicationContext(), GetUserId.class);
+        startActivity(intent);
+        String uid = intent.getStringExtra("UID");
+
+        setContentView(R.layout.activity_update_user);
 
         editText = findViewById(R.id.editText_UID);
         mEmailView = findViewById(R.id.register_email);
@@ -41,8 +46,6 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     private void updateUser(String uid){
-
-        setContentView(R.layout.activity_update_user);
 
         /*UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(uid)
                 .setEmail(mEmailView.getText().toString())

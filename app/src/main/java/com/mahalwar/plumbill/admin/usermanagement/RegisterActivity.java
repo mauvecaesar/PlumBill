@@ -11,25 +11,31 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.mahalwar.plumbill.R;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -52,6 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private final int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
+    private Task<Uri> imgpath;
+    String imgname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,24 +73,13 @@ public class RegisterActivity extends AppCompatActivity {
         mPhoneView = findViewById(R.id.register_phone);
         mAadhaarView = findViewById(R.id.register_aadhaar);
 
-        Button buttonChooseImage = findViewById(R.id.buttonChoosePicture);
         Button buttonUploadImage = findViewById(R.id.buttonUploadPicture);
         imageView = findViewById(R.id.personimageView);
         Button registerButton = findViewById(R.id.register_sign_up_button);
 
         // Keyboard sign in action
-        mConfirmPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
-            if (id == R.integer.register_form_finished || id == EditorInfo.IME_NULL) {
-                attemptRegistration();
-                return true;
-            }
-            return false;
-        });
-
         firestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-
-        buttonChooseImage.setOnClickListener(v -> SelectImage());
 
         buttonUploadImage.setOnClickListener(v -> uploadImage());
 
@@ -90,16 +87,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void SelectImage()
+    private void uploadImage()
     {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
 
-    private void uploadImage()
-    {
         if (filePath != null) {
 
             // Code for showing progressDialog while uploading
@@ -108,17 +102,22 @@ public class RegisterActivity extends AppCompatActivity {
             progressDialog.show();
 
             // Defining the child of storageReference
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
 
+            imgname = UUID.randomUUID().toString();
+            StorageReference ref = storageReference.child("Profile Images/" + imgname);
+
+            // Image uploaded successfully
+            // Dismiss dialog
+            // Error, Image not uploaded
             ref.putFile(filePath)
 
                     .addOnSuccessListener(taskSnapshot -> {
-
-                // Image uploaded successfully
-                // Dismiss dialog
-                progressDialog.dismiss();
-                Toast.makeText(RegisterActivity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
-            })
+                        // Image uploaded successfully
+                        // Dismiss dialog
+                        progressDialog.dismiss();
+                        imgpath = ref.getDownloadUrl();
+                        Toast.makeText(RegisterActivity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+                    })
                     .addOnFailureListener(e -> {
 
                         // Error, Image not uploaded
@@ -127,12 +126,13 @@ public class RegisterActivity extends AppCompatActivity {
                     })
 
                     .addOnProgressListener(taskSnapshot -> {
-                                double progress
-                                        = (100.0
-                                        * taskSnapshot.getBytesTransferred()
-                                        / taskSnapshot.getTotalByteCount());
-                                progressDialog.setMessage("Uploaded " + (int)progress + "%");
-                            });
+                        double progress
+                                = (100.0
+                                * taskSnapshot.getBytesTransferred()
+                                / taskSnapshot.getTotalByteCount());
+                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                    });
+
         }
     }
 
@@ -160,12 +160,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void attemptRegistration() {
-
-        //Reset errors displayed in the form.
-        /*mEmailView.setError(null);
-        mPasswordView.setError(null);
-        mAadhaarView.setError(null);
-        mPhoneView.setError(null);*/
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
@@ -215,7 +209,7 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isPasswordValid(String password) {
         //TODO: Add own logic to check for a valid password (minimum 6 characters)
         String confirmPassword = mConfirmPasswordView.getText().toString();
-        return confirmPassword.equals(password) && password.length() >= 6;
+        return confirmPassword.equals(password);
     }
 
     // TODO: Create a Firebase user
@@ -231,50 +225,48 @@ public class RegisterActivity extends AppCompatActivity {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
 
-            DocumentReference documentReference = firestore.collection("Users").document(aadhaar);
-            Map<String, Object> userInfo = new HashMap<>();
-            userInfo.put("Name", name);
-            userInfo.put("Email", email);
-            userInfo.put("Phone", phone);
-            userInfo.put("Aadhaar", aadhaar);
-            userInfo.put("UID", aadhaar);
-            userInfo.put("isUser", "1");
-            userInfo.put("imgURL", filePath.toString());
+                    DocumentReference documentReference = firestore.collection("AadhaarUsers").document(aadhaar);
+                    Map<String, Object> userInfo = new HashMap<>();
+                    userInfo.put("Name", name);
+                    userInfo.put("Email", email);
+                    userInfo.put("Phone", phone);
+                    userInfo.put("Aadhaar", aadhaar);
+                    userInfo.put("UID", authResult.getUser().getUid());
+                    userInfo.put("isUser", true);
+                    userInfo.put("imgURL", imgpath);
+                    userInfo.put("Cash", 0);
+                    userInfo.put("Supercash", 0);
 
-            documentReference.set(userInfo);
-        }).addOnFailureListener(e -> showErrorDialog());
+                    documentReference.set(userInfo);
+
+                    documentReference = firestore.collection("UIDUsers").document(authResult.getUser().getUid());
+                    userInfo = new HashMap<>();
+                    userInfo.put("Name", name);
+                    userInfo.put("Email", email);
+                    userInfo.put("Phone", phone);
+                    userInfo.put("Aadhaar", aadhaar);
+                    userInfo.put("UID", authResult.getUser().getUid());
+                    userInfo.put("isUser", true);
+                    userInfo.put("imgURL", imgpath);
+                    userInfo.put("Cash", 0);
+                    userInfo.put("Supercash", 0);
+
+                    documentReference.set(userInfo);
+
+                    Log.d("PlumBill", "Successfully created user");
+                    finish();
+
+                })
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Couldn't register user", Toast.LENGTH_SHORT).show());
 
     }
 
     private void makeToast(){
-        Toast.makeText(this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Image Uploaded to Database", Toast.LENGTH_SHORT).show();
     }
-    /*
-    // TODO: Save the display name to Shared Preferences
-    private void saveDisplayName()
-    {
-        String displayName = mUsernameView.getText().toString();
-        SharedPreferences prefs = getSharedPreferences(CHAT_PREFS, 0);
-        prefs.edit().putString(DISPLAY_NAME_KEY, displayName).apply();
-        FirebaseUser user = FirebaseAuth.getInstance().getUser();
-
-        if(user!=null)
-        {
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(displayName)
-                    .build();
-
-            user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d("PlumBill", "User profile updated.");
-                        }
-                    });
-        }
-
-    }*/
 
     // TODO: Create an alert dialog to show in case registration failed
     private void showErrorDialog()

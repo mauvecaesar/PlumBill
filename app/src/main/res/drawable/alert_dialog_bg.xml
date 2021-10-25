@@ -2,23 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-
             <solid
-                android:color="@color/lighter_orange"/>
-
-            <stroke
-                android:color="@color/lightgrey"
-                android:width=".5pt"/>
-
-            <corners
-                android:radius="2mm"/>
-
-            <padding
-                android:bottom="@dimen/padding"
-                android:top="@dimen/padding"
-                android:left="@dimen/padding"
-                android:right="@dimen/padding"/>
-
+                android:color="@color/grey"/>
         </shape>
     </item>
 

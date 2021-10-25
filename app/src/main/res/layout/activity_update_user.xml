@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="@style/AppTheme">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,8 +23,8 @@
             android:id="@+id/personimageView"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             app:srcCompat="@drawable/plumbill_logo1_transparent"
             android:contentDescription="@string/todo" />
 
@@ -146,7 +145,7 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             style="@style/ButtonTheme"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:text="@string/update_user" />
 
     </LinearLayout>

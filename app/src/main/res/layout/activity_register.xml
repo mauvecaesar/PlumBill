@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="@dimen/padding"
         style="@style/AppTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,6 +34,8 @@
                 android:layout_height="match_parent"
                 android:hint="@string/prompt_username"
                 style="@style/AutoCompleteTheme"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/lightgrey"
                 android:inputType="textNoSuggestions"
                 tools:targetApi="p" />
 
@@ -124,33 +126,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <Button
+            android:id="@+id/buttonUploadPicture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal|center_vertical|center"
-            android:layout_gravity="center_horizontal|center|center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/buttonChoosePicture"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:text="@string/choose_picture"
-                android:layout_marginRight="5dp"
-                style="@style/whiteButtonTheme"
-                android:layout_marginEnd="5dp"/>
-
-            <Button
-                android:id="@+id/buttonUploadPicture"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="@string/load_picture"
-                style="@style/whiteButtonTheme"
-                android:layout_marginStart="5dp"/>
-
-        </LinearLayout>
-
+            android:layout_marginTop="@dimen/margin"
+            android:text="@string/load_picture"
+            style="@style/whiteButtonTheme" />
         <Button
             android:id="@+id/register_sign_up_button"
             android:layout_width="match_parent"

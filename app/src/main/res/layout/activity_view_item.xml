@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding"
+    android:background="@color/lighter_orange">
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/TextViewTheme"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:text="@string/product_name" />
+
+        <TextView
+            android:id="@+id/viewitem_name"
+            style="@style/TextViewTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/pid"
+            style="@style/TextViewTheme"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:text="@string/product_id" />
+
+        <TextView
+            android:id="@+id/viewitem_pid"
+            style="@style/TextViewTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="250dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+
+        <TextView
+            android:id="@+id/price"
+            style="@style/TextViewTheme"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@string/product_price" />
+
+        <TextView
+            android:id="@+id/viewitem_price"
+            style="@style/TextViewTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

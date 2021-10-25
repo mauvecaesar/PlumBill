@@ -6,42 +6,43 @@
     style="@style/AppTheme">
 
     <ImageView
-        android:id="@+id/imageView4"
-        style="@style/ImageTheme"
+        android:id="@+id/imageView"
         android:layout_marginTop="100dp"
-        android:layout_marginBottom="70dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView1"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/todo" />
+        style="@style/ImageTheme" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView2"
         style="@style/TextViewTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:autofillHints="@string/product_name"
+        android:gravity="center_horizontal"
         android:text="@string/enter_product_name"
-        app:layout_constraintBottom_toTopOf="@+id/editText_removeitemname"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/editText_PID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
-        android:id="@+id/editText_removeitemname"
+        android:id="@+id/editText_PID"
         style="@style/EditorFieldStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
         android:hint="@string/product_name"
-        android:inputType="textCapWords"
+        android:inputType="text"
+        android:textColorHint="@color/lightgrey"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/submitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1"
-        android:autofillHints="@string/product_name" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        android:autofillHints="Product Name" />
 
     <Button
         android:id="@+id/submitButton"
@@ -52,9 +53,7 @@
         android:text="@string/submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_removeitemname" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editText_PID" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
