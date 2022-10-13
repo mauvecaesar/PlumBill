@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "492399329250",
-    "project_id": "plumbill",
-    "storage_bucket": "plumbill.appspot.com"
+    "project_number": "**********",
+    "project_id": "**********",
+    "storage_bucket": "**********"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:492399329250:android:08ca65af053ac1a00843bb",
+        "mobilesdk_app_id": "1:**********:android:**********",
         "android_client_info": {
           "package_name": "com.mahalwar.plumbill"
         }
       },
       "oauth_client": [
         {
-          "client_id": "492399329250-3tdmajmhjgeklj0viv4ncjbv4vf7agto.apps.googleusercontent.com",
+          "client_id": "**********-**********.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBHDI5WPhHiDTONhTjdr3E1Hk5C-Q0WxRQ"
+          "current_key": "**********"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "492399329250-3tdmajmhjgeklj0viv4ncjbv4vf7agto.apps.googleusercontent.com",
+              "client_id": "**********-3**********.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
